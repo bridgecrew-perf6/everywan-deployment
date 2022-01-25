@@ -1,0 +1,97 @@
+---
+version: "3.5"
+
+services:
+  keystone:
+    container_name: keystone
+    build:
+      context: ./keystone/
+      args:
+        KEYSTONE_DB_PASSWORD: ${KEYSTONE_DB_PASSWORD}
+        KEYSTONE_DB_HOST: ${KEYSTONE_DB_HOST:-"database"}
+        KEYSTONE_ADMIN_PASSWORD: ${KEYSTONE_ADMIN_PASSWORD}
+        HTTP: ${HTTP:-http}
+    depends_on:
+      - database
+    networks:
+      - keystone-net
+      - everywan-net
+    env_file:
+    - ./keystone/.env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      KEYSTONE_ADMIN_PASSWORD: ${KEYSTONE_ADMIN_PASSWORD}
+      KEYSTONE_DB_PASSWORD: ${KEYSTONE_DB_PASSWORD}
+      KEYSTONE_DB_HOST: ${KEYSTONE_DB_HOST:-"database"}
+      KEYSTONE_DB_USER: ${KEYSTONE_DB_USER:-keystone}
+      KEYSTONE_DB_NAME: ${KEYSTONE_DB_NAME:-keystone}
+      KEYSTONE_DEBUG: ${KEYSTONE_DEBUG:-"false"}
+      HTTP: ${HTTP:-http}
+
+  database:
+    container_name: keystone-database
+    image: mariadb:10.4.5-bionic
+    networks:
+      - keystone-net
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MARKET_DB_PASSWORD: ${MARKET_DB_PASSWORD}
+      PROVIDER_DB_PASSWORD: ${PROVIDER_DB_PASSWORD}
+      MYSQL_USER: ${KEYSTONE_DB_USER:-keystone}
+      MYSQL_PASSWORD: ${KEYSTONE_DB_PASSWORD}
+      MYSQL_DATABASE: ${KEYSTONE_DB_NAME:-keystone}
+
+
+  mongodb:
+    container_name: mongodb
+    image: mongo:3.6
+    environment:
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+    volumes:
+      - ./mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks: 
+      - everywan-net
+
+
+  everyboss:
+    container_name: everyboss
+    image: ghcr.io/cscarpitta/everyboss:latest
+    networks: 
+      - everywan-net
+    environment:
+      KEYSTONE_IP: ${KEYSTONE_HOST:-keystone}
+      CONTROLLER_IP: ${CONTROLLER_HOST:-everyedgeos}
+      CONTROLLER_PORT: ${CONTROLLER_PORT:-54321}
+
+
+  everyedgeos:
+    container_name: everyedgeos
+    image: ghcr.io/cscarpitta/everyedgeos:latest
+    cap_add:
+      - NET_ADMIN
+    networks:
+      - everywan-net
+    ports:
+      - "50061:50061"
+    environment:
+      MONGODB_HOST: ${MONGO_IP:-mongodb}
+      MONGODB_PORT: ${MONGO_PORT:-27017}
+
+
+  everygui:
+    container_name: everygui
+    image: ghcr.io/cscarpitta/everygui:latest
+    networks: 
+      - everywan-net
+    ports:
+      - "80:80"
+    environment:
+      EVERYBOSS_IP: ${EVERYBOSS_HOST:-everyboss}
+
+
+networks:
+  keystone-net:
+  nbi-net:
+  everywan-net:
