@@ -37,13 +37,23 @@ REPOS_FOLDER="/tmp/everywan-repos"
 apt-get update || { echo 'Failed' ; exit 1; }
 
 # Install dependencies
-DEBIAN_FRONTEND="noninteractive" apt-get install -y git python3 python3-pip jq libffi-dev libssl-dev  graphviz graphviz-dev screen || { echo 'Failed' ; exit 1; }
+DEBIAN_FRONTEND="noninteractive" apt-get install -y git python3 python3-pip jq libffi-dev libssl-dev  graphviz graphviz-dev screen libyang2-dev frr coturn || { echo 'Failed' ; exit 1; }
 
 # Install Rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 # Reload .bashrc
 source ~/.bashrc
+
+# Add GPG key for frr
+curl -s https://deb.frrouting.org/frr/keys.asc | apt-key add -
+
+# frr-stable will be the latest official stable release
+FRRVER="frr-stable"
+echo deb https://deb.frrouting.org/frr $(lsb_release -s -c) $FRRVER | tee -a /etc/apt/sources.list.d/frr.list
+
+# Update and install FRR
+apt update && apt install frr frr-pythontools
 
 # Create a virtual environment
 python3 -m venv "${VENV_FOLDER}" || { echo 'Failed' ; exit 1; }
@@ -101,6 +111,9 @@ pip3 install dist/pyroute2-* || { echo 'Failed' ; exit 1; }
 
 # Install Mininet
 pip3 install mininet
+
+# Install etherws Python library
+pip3 install etherws
 
 # Setup pynat
 pip3 install six || { echo 'Failed' ; exit 1; }
