@@ -198,7 +198,7 @@ After the setup, enter in the `srv6-sdn-mininet` folder and run the emulation:
 
 ```bash
 cd <deployment-dir>/srv6-sdn-mininet
-bash ./starter.sh
+sudo bash ./starter.sh
 ```
 
 The folder `topo` contains several sample topologies. You can emulate any of the topologies contained in the `topo` folder or you can create your own topology.
