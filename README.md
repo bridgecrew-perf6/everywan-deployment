@@ -176,7 +176,7 @@ Although not mandatory, it is recommended that you install the dependencies in a
 (Optional) Create a Python virtual environment:
 
 ```bash
-python3 -m ~/.venv/everywan-venv
+python3 -m venv ~/.venv/everywan-venv
 ```
 
 (Optional) Activate the virtual environment:
