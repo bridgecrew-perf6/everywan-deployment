@@ -6,12 +6,12 @@ This repository contains some scripts to automate the deployment and configurati
 ## Outline
 
 1. [Physical Deployment](#physical-deployment)
-    1.1. [EveryEdgeOS (EveryWAN controller) and management infrastructure](#everyedgeos-everywan-controller-and-management-infrastructure)
-    1.2. [EveryEdge Device](#everyedge-device)
-    1.3. [Virtual Hosts](#virtual-hosts)
+    1. [EveryEdgeOS (EveryWAN controller) and management infrastructure](#everyedgeos-everywan-controller-and-management-infrastructure)
+    2. [EveryEdge Device](#everyedge-device)
+    3. [Virtual Hosts](#virtual-hosts)
 2. [Virtual Testbed](#virtual-testbed)
-    2.1. [Management Infrastructure](#management-infrastructure)
-    2.2. [Virtual Network](#virtual-network)
+    1. [Management Infrastructure](#management-infrastructure)
+    2. [Virtual Network](#virtual-network)
 
 
 ## Physical Deployment
