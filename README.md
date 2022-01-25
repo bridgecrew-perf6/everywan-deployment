@@ -149,13 +149,13 @@ This repository contains the tools required to run EveryWAN in a virtual testbed
 
 ### Management Infrastructure
 
-To deploy the EveryWAN Management Infrastructure, clone the following repository:
+To deploy the EveryWAN Management Infrastructure, clone this repository:
 
 ```bash
 git clone https://github.com/everywan-io/everywan-deployment
 ```
 
-Then, `cd` to the repository folder:
+Then, `cd` to the `virtual-testbed` folder:
 
 ```bash
 cd everywan-deployment/virtual-testbed
@@ -170,37 +170,35 @@ bash ./deploy_everywan_mgmt.sh
 ### Virtual network
 
 You can create a virtual network to emulate an arbitrary number of EveryEdge devices and provider routers.
-
-Although not mandatory, it is recommended that you install the dependencies in a Python virtual environment.
-
-(Optional) Create a Python virtual environment:
+To setup the tools required to emulate a virtual network, , clone this repository:
 
 ```bash
-python3 -m ~/.venv/everywan-venv
+git clone https://github.com/everywan-io/everywan-deployment
 ```
 
-(Optional) Activate the virtual environment:
+Then, `cd` to the `virtual-testbed` folder:
 
 ```bash
-source ~/.venv/everywan-venv/bin/activate
+cd everywan-deployment/virtual-testbed
 ```
 
-Clone the following repository:
+Finally, run the following command (this requires root privileges):
 
 ```bash
-https://github.com/everywan-io/srv6-sdn-mininet
+sudo bash ./deploy_virtual_network.sh [-d <deployment-dir>]
 ```
 
-Then, `cd` to the repository folder:
+where `deployment-dir` is the path to the folder where you want to install the EveryWAN modules. The default value is:
+
+```
+deployment-dir: /opt/everywan
+```
+
+After the setup, enter in the `srv6-sdn-mininet` folder and run the emulation:
 
 ```bash
-cd srv6-sdn-mininet
+cd <deployment-dir>/srv6-sdn-mininet
+sudo bash ./starter.sh
 ```
 
-Emulate the desired topology:
-
-```bash
-sudo /home/rose/workspace/everywan/.everywan-venv/bin/python ./srv6_mininet_extension.py --topo topo/topology_h_multisub_ipv6.json
-```
-
-The folder `topo` contains several sample topologies. You can emulate one of the topologies contained in the `topo` folder or you can create your own topology.
+The folder `topo` contains several sample topologies. You can emulate any of the topologies contained in the `topo` folder or you can create your own topology.
