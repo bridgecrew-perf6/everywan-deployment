@@ -37,7 +37,7 @@ REPOS_FOLDER="/tmp/everywan-repos"
 apt-get update || { echo 'Failed' ; exit 1; }
 
 # Install dependencies
-DEBIAN_FRONTEND="noninteractive" apt-get install -y git python3 python3-pip jq libffi-dev libssl-dev  graphviz graphviz-dev || { echo 'Failed' ; exit 1; }
+DEBIAN_FRONTEND="noninteractive" apt-get install -y git python3 python3-pip jq libffi-dev libssl-dev  graphviz graphviz-dev screen || { echo 'Failed' ; exit 1; }
 
 # Install Rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -77,7 +77,9 @@ git clone git@github.com:everywan-io/srv6-sdn-control-plane.git --branch experim
 git clone git@github.com:everywan-io/srv6-sdn-openssl.git ${REPOS_FOLDER}/srv6-sdn-openssl || { echo 'Failed' ; exit 1; }
 git clone git@github.com:everywan-io/srv6-sdn-controller-state.git --branch experimental-dockerize-controller ${REPOS_FOLDER}/srv6-sdn-controller-state || { echo 'Failed' ; exit 1; }
 git clone git@bitbucket.org:pierventre/srv6-properties-generators.git --branch carmine ${REPOS_FOLDER}/srv6-properties-generators || { echo 'Failed' ; exit 1; }
-git clone git@github.com:everywan-io/srv6-sdn-mininet.git --branch ipv6-support ${EVERYWAN_FOLDER}/srv6-sdn-mininet || { echo 'Failed' ; exit 1; }
+git clone git@github.com:everywan-io/srv6-sdn-mininet.git --branch add_ipv6_support ${EVERYWAN_FOLDER}/srv6-sdn-mininet || { echo 'Failed' ; exit 1; }
+git clone git@bitbucket.org:ssalsano/dreamer-topology-parser-and-validator.git --branch carmine ${REPOS_FOLDER}/dreamer-topology-parser-and-validator || { echo 'Failed' ; exit 1; }
+git clone git@github.com:everywan-io/srv6-applications.git --branch add_ipv6_support ${EVERYWAN_FOLDER}/srv6-applications || { echo 'Failed' ; exit 1; }
 
 # Workaround: The patch which introduces the support for End.DT4 and End.DT46
 # behaviors has not been accepted yet
@@ -96,6 +98,9 @@ pip3 install dist/pyroute2.nftables-* || { echo 'Failed' ; exit 1; }
 pip3 install dist/pyroute2.nslink-* || { echo 'Failed' ; exit 1; }
 pip3 install dist/pyroute2.protocols-* || { echo 'Failed' ; exit 1; }
 pip3 install dist/pyroute2-* || { echo 'Failed' ; exit 1; }
+
+# Install Mininet
+pip3 install mininet
 
 # Setup pynat
 pip3 install six || { echo 'Failed' ; exit 1; }
@@ -132,6 +137,14 @@ python3 setup.py install || { echo 'Failed' ; exit 1; }
 
 # Setup properties generators
 cd ${REPOS_FOLDER}/srv6-properties-generators || { echo 'Failed' ; exit 1; }
+python3 setup.py install || { echo 'Failed' ; exit 1; }
+
+# Setup topology parser
+cd ${REPOS_FOLDER}/dreamer-topology-parser-and-validator || { echo 'Failed' ; exit 1; }
+python3 setup.py install || { echo 'Failed' ; exit 1; }
+
+# Setup SRv6 applications
+cd ${REPOS_FOLDER}/srv6-applications || { echo 'Failed' ; exit 1; }
 python3 setup.py install || { echo 'Failed' ; exit 1; }
 
 

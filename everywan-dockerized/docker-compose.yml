@@ -27,6 +27,9 @@ services:
       KEYSTONE_DB_NAME: ${KEYSTONE_DB_NAME:-keystone}
       KEYSTONE_DEBUG: ${KEYSTONE_DEBUG:-"false"}
       HTTP: ${HTTP:-http}
+    ports:
+      - "5000:5000"
+      - "35357:35357"
 
   database:
     container_name: keystone-database
@@ -51,6 +54,8 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - ./mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    ports: 
+      - "27017:27017"
     networks: 
       - everywan-net
 
