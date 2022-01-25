@@ -182,10 +182,10 @@ Then, `cd` to the `virtual-testbed` folder:
 cd everywan-deployment/virtual-testbed
 ```
 
-Finally, run the following command:
+Finally, run the following command (this requires root privileges):
 
 ```bash
-bash ./deploy_virtual_network.sh [-d <deployment-dir>]
+sudo bash ./deploy_virtual_network.sh [-d <deployment-dir>]
 ```
 
 where `deployment-dir` is the path to the folder where you want to install the EveryWAN modules. The default value is:
