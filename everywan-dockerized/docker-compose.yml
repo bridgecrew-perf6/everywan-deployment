@@ -61,9 +61,14 @@ services:
     networks: 
       - everywan-net
     environment:
-      KEYSTONE_IP: ${KEYSTONE_HOST:-keystone}
+      KEYSTONE_HOST: ${KEYSTONE_HOST:-keystone}
+      KEYSTONE_PORT: ${KEYSTONE_PORT:-5000}
       CONTROLLER_IP: ${CONTROLLER_HOST:-everyedgeos}
       CONTROLLER_PORT: ${CONTROLLER_PORT:-54321}
+      MONGODB_HOST: ${MONGODB_HOST:-mongodb}
+      MONGODB_PORT: ${MONGODB_PORT:-27017}
+      MONGODB_USERNAME: ${MONGODB_USERNAME:-root}
+      MONGODB_PASSWORD: ${MONGODB_PASSWORD:-12345678}
 
 
   everyedgeos:
