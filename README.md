@@ -147,30 +147,11 @@ This repository contains the tools required to run EveryWAN in a virtual testbed
 * Docker Engine (https://docs.docker.com/engine/install/)
 * Docker Compose (https://docs.docker.com/compose/install/)
 
-### Management Infrastructure
-
-To deploy the EveryWAN Management Infrastructure, clone this repository:
-
-```bash
-git clone https://github.com/everywan-io/everywan-deployment
-```
-
-Then, `cd` to the `virtual-testbed` folder:
-
-```bash
-cd everywan-deployment/virtual-testbed
-```
-
-Build and run the MongoDB, Keystone, MariaDB, EveryGUI and EveryBOSS containers:
-
-```bash
-bash ./deploy_everywan_mgmt.sh
-```
-
 ### Virtual network
 
-You can create a virtual network to emulate an arbitrary number of EveryEdge devices and provider routers.
-To setup the tools required to emulate a virtual network, , clone this repository:
+You can create a virtual network to emulate an arbitrary number of EveryEdge devices and provider routers. Virtual testbed includes all the EveryWAN components: EveryEdgeOS (controller), EveryEdge devices, management infrastructure (MongoDB, MariaDB, Keystone, EveryBOSS, EveryGUI).
+
+To setup the tools required to emulate a virtual network, clone this repository:
 
 ```bash
 git clone https://github.com/everywan-io/everywan-deployment
@@ -182,23 +163,14 @@ Then, `cd` to the `virtual-testbed` folder:
 cd everywan-deployment/virtual-testbed
 ```
 
-Finally, run the following command (this requires root privileges):
+Finally, run the following command:
 
 ```bash
-sudo bash ./deploy_virtual_network.sh [-d <deployment-dir>]
+bash ./deploy_everywan_virtual.sh
 ```
 
-where `deployment-dir` is the path to the folder where you want to install the EveryWAN modules. The default value is:
-
-```
-deployment-dir: /opt/everywan
-```
-
-After the setup, enter in the `srv6-sdn-mininet` folder and run the emulation:
+To attach to the Mininet CLI and control your virtual network:
 
 ```bash
-cd <deployment-dir>/srv6-sdn-mininet
-sudo bash ./starter.sh
+bash ./attach_to_mininet_cli.sh
 ```
-
-The folder `topo` contains several sample topologies. You can emulate any of the topologies contained in the `topo` folder or you can create your own topology.
