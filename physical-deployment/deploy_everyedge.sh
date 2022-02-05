@@ -51,8 +51,9 @@ VENV_ACTIVATE_SCRIPT="${VENV_FOLDER}/bin/activate"
 STARTER_FILENAME="${EVERYEDGE_FOLDER}/starter.sh"
 REPOS_FOLDER="/tmp/everywan-repos"
 
-# Remove previous versions of EveryEde
+# Remove previous versions of EveryEdge
 rm -rf ${EVERYEDGE_FOLDER}
+rm -rf ${REPOS_FOLDER}
 
 # Create EveryEdge folder
 mkdir -p ${EVERYEDGE_FOLDER}
