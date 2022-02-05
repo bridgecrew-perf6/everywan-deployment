@@ -65,7 +65,7 @@ apt-get update || { echo 'Failed' ; exit 1; }
 DEBIAN_FRONTEND="noninteractive" apt-get install -y git python3 python3-pip jq libffi-dev libssl-dev || { echo 'Failed' ; exit 1; }
 
 # Install Rust
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
 # Reload .bashrc
 source ~/.bashrc
