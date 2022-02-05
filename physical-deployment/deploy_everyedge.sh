@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Software versions
+EVERYWAN_PROTO_VERSION=v0.1.0
+EVERYWAN_STAMP_LIBRARY_VERSION=v0.1.1
+EVERYWAN_DATA_PLANE_VERSION=v0.1.0
+EVERYWAN_AUTHENTICATION_LIBRARY_VERSION=v0.1.0
+
 if [ "$EUID" -ne 0 ]
   then echo "This script must run as root."
   exit
@@ -67,6 +73,9 @@ source "${VENV_ACTIVATE_SCRIPT}" || { echo 'Failed' ; exit 1; }
 # We force the installationof protobuf 3.19.1
 pip3 install protobuf==3.19.1 || { echo 'Failed' ; exit 1; }
 
+# Remove previous versions of EveryEde
+rm -rf ${EVERYEDGE_FOLDER}
+
 # Create EveryEdge folder
 mkdir -p ${EVERYEDGE_FOLDER}
 
@@ -81,10 +90,10 @@ mkdir -p ${REPOS_FOLDER} || { echo 'Failed' ; exit 1; }
 
 # Clone the repositories
 git clone git@github.com:cscarpitta/pynat.git ${REPOS_FOLDER}/pynat || { echo 'Failed' ; exit 1; }
-git clone git@github.com:everywan-io/srv6-sdn-data-plane.git --branch experimental/dockerize-everyedge  ${REPOS_FOLDER}/srv6-sdn-data-plane || { echo 'Failed' ; exit 1; }
-git clone git@github.com:everywan-io/srv6-sdn-proto.git --branch experimental/dockerize-controller  ${REPOS_FOLDER}/srv6-sdn-proto || { echo 'Failed' ; exit 1; }
-git clone git@github.com:everywan-io/srv6-sdn-authentication.git --branch experimental/dockerize-everyedge  ${REPOS_FOLDER}/srv6-sdn-authentication || { echo 'Failed' ; exit 1; }
-git clone git@github.com:cscarpitta/srv6pm-delay-measurement.git --branch feature/align-to-mgmt-plane  ${REPOS_FOLDER}/srv6pm-delay-measurement || { echo 'Failed' ; exit 1; }
+git clone git@github.com:everywan-io/srv6-sdn-data-plane.git --branch $EVERYWAN_DATA_PLANE_VERSION  ${REPOS_FOLDER}/srv6-sdn-data-plane || { echo 'Failed' ; exit 1; }
+git clone git@github.com:everywan-io/srv6-sdn-proto.git --branch $EVERYWAN_PROTO_VERSION  ${REPOS_FOLDER}/srv6-sdn-proto || { echo 'Failed' ; exit 1; }
+git clone git@github.com:everywan-io/srv6-sdn-authentication.git --branch $EVERYWAN_AUTHENTICATION_LIBRARY_VERSION  ${REPOS_FOLDER}/srv6-sdn-authentication || { echo 'Failed' ; exit 1; }
+git clone git@github.com:cscarpitta/srv6pm-delay-measurement.git --branch $EVERYWAN_STAMP_LIBRARY_VERSION  ${REPOS_FOLDER}/srv6pm-delay-measurement || { echo 'Failed' ; exit 1; }
 
 # Workaround: The patch which introduces the support for End.DT4 and End.DT46
 # behaviors has not been accepted yet
