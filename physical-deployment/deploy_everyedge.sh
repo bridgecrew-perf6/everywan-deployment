@@ -51,6 +51,12 @@ VENV_ACTIVATE_SCRIPT="${VENV_FOLDER}/bin/activate"
 STARTER_FILENAME="${EVERYEDGE_FOLDER}/starter.sh"
 REPOS_FOLDER="/tmp/everywan-repos"
 
+# Remove previous versions of EveryEde
+rm -rf ${EVERYEDGE_FOLDER}
+
+# Create EveryEdge folder
+mkdir -p ${EVERYEDGE_FOLDER}
+
 # Update the package lists
 apt-get update || { echo 'Failed' ; exit 1; }
 
@@ -72,12 +78,6 @@ source "${VENV_ACTIVATE_SCRIPT}" || { echo 'Failed' ; exit 1; }
 # Workaround to solve an issue related to protobuf versions
 # We force the installationof protobuf 3.19.1
 pip3 install protobuf==3.19.1 || { echo 'Failed' ; exit 1; }
-
-# Remove previous versions of EveryEde
-rm -rf ${EVERYEDGE_FOLDER}
-
-# Create EveryEdge folder
-mkdir -p ${EVERYEDGE_FOLDER}
 
 # Download public key for github.com
 mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts || { echo 'Failed' ; exit 1; }
