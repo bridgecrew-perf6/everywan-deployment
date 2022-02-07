@@ -12,7 +12,7 @@ usage() {
   exit 1
 }
 
-while getopts ":n:" opt
+while getopts ":n:i:" opt
 do
     case $opt in
         n) NUM_HOSTS="${OPTARG}" ;;
@@ -36,7 +36,7 @@ then
    START_ID=1
 fi
 
-for HOST in $(seq ${START_ID} ${START_ID}+${NUM_HOSTS}-1)
+for HOST in $(seq ${START_ID} $((${START_ID}+${NUM_HOSTS}-1)))
 do
     echo ""
     echo "*************"
