@@ -8,7 +8,7 @@ then
 fi
 
 usage() {
-	echo "Usage: $0 -n <num-hosts>" 1>&2
+	echo "Usage: $0 -n <num-hosts> -i <start-id>" 1>&2
   exit 1
 }
 
@@ -16,6 +16,7 @@ while getopts ":n:" opt
 do
     case $opt in
         n) NUM_HOSTS="${OPTARG}" ;;
+        i) START_ID="${OPTARG}" ;;
         *) usage
 			;;
     esac
@@ -28,7 +29,14 @@ then
    usage
 fi
 
-for HOST in $(seq 1 ${NUM_HOSTS})
+if [ -z "$START_ID" ]
+then
+   echo "Parameter -i <start-id> is missing. Using START_ID=1";
+   echo ""
+   START_ID=1
+fi
+
+for HOST in $(seq ${START_ID} ${START_ID}+${NUM_HOSTS}-1)
 do
     echo ""
     echo "*************"
