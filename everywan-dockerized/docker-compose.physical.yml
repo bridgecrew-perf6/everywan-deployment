@@ -1,5 +1,5 @@
 ---
-version: "3.5"
+version: "2.3"
 
 services:
   keystone:
@@ -78,6 +78,9 @@ services:
       - NET_ADMIN
     networks:
       - everywan-net
+      - everyedgeos-net
+    sysctls:
+      - "net.ipv6.conf.all.disable_ipv6=0"
     ports:
       - "50061:50061"
     environment:
@@ -123,9 +126,11 @@ networks:
   keystone-net:
   nbi-net:
   everywan-net:
-    driver_opts:
-      com.docker.network.bridge.enable_ip_masquerade: "true"
-    enable_ipv6: false
+    ipam:
+      config:
+        - subnet: "2001:db9:1::/64"
+  everyedgeos-net:
+    enable_ipv6: true
     ipam:
       config:
         - subnet: "2001:db9:1::/64"
