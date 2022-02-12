@@ -1,10 +1,7 @@
 #!/bin/bash
 
 # Software versions
-EVERYWAN_PROTO_VERSION=v0.1.0
-EVERYWAN_STAMP_LIBRARY_VERSION=v0.1.3
-EVERYWAN_DATA_PLANE_VERSION=v0.1.0
-EVERYWAN_AUTHENTICATION_LIBRARY_VERSION=v0.1.0
+EVERYEDGE_VERSION=v0.1.4
 
 if [ "$EUID" -ne 0 ]
   then echo "This script must run as root."
@@ -49,6 +46,7 @@ EVERYEDGE_FOLDER="${DEPLOYMENT_DIR}/everyedge"
 VENV_FOLDER="${EVERYEDGE_FOLDER}/everyedge-venv"
 VENV_ACTIVATE_SCRIPT="${VENV_FOLDER}/bin/activate"
 STARTER_FILENAME="${EVERYEDGE_FOLDER}/starter.sh"
+VERSION_FILENAME="${EVERYEDGE_FOLDER}/VERSION"
 REPOS_FOLDER="/tmp/everywan-repos"
 
 # Remove previous versions of EveryEdge
@@ -90,11 +88,9 @@ mkdir -p -m 0600 ~/.ssh && ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts || { 
 mkdir -p ${REPOS_FOLDER} || { echo 'Failed' ; exit 1; }
 
 # Clone the repositories
-git clone git@github.com:cscarpitta/pynat.git ${REPOS_FOLDER}/pynat || { echo 'Failed' ; exit 1; }
-git clone git@github.com:everywan-io/srv6-sdn-data-plane.git --branch $EVERYWAN_DATA_PLANE_VERSION  ${REPOS_FOLDER}/srv6-sdn-data-plane || { echo 'Failed' ; exit 1; }
-git clone git@github.com:everywan-io/srv6-sdn-proto.git --branch $EVERYWAN_PROTO_VERSION  ${REPOS_FOLDER}/srv6-sdn-proto || { echo 'Failed' ; exit 1; }
-git clone git@github.com:everywan-io/srv6-sdn-authentication.git --branch $EVERYWAN_AUTHENTICATION_LIBRARY_VERSION  ${REPOS_FOLDER}/srv6-sdn-authentication || { echo 'Failed' ; exit 1; }
-git clone git@github.com:cscarpitta/srv6pm-delay-measurement.git --branch $EVERYWAN_STAMP_LIBRARY_VERSION  ${REPOS_FOLDER}/srv6pm-delay-measurement || { echo 'Failed' ; exit 1; }
+git clone git@github.com:cscarpitta/everyedge.git --branch ${EVERYEDGE_VERSION} ${REPOS_FOLDER}/everyedge || { echo 'Failed' ; exit 1; }
+cd ${REPOS_FOLDER}/everyedge || { echo 'Failed' ; exit 1; }
+git submodule update --init || { echo 'Failed' ; exit 1; }
 
 # Workaround: The patch which introduces the support for End.DT4 and End.DT46
 # behaviors has not been accepted yet
@@ -116,23 +112,23 @@ pip3 install dist/pyroute2-* || { echo 'Failed' ; exit 1; }
 
 # Setup pynat
 pip3 install six || { echo 'Failed' ; exit 1; }
-cd ${REPOS_FOLDER}/pynat || { echo 'Failed' ; exit 1; }
+cd ${REPOS_FOLDER}/everyedge/src/pynat || { echo 'Failed' ; exit 1; }
 python3 setup.py install || { echo 'Failed' ; exit 1; }
 
 # Setup data plane
-cd ${REPOS_FOLDER}/srv6-sdn-data-plane || { echo 'Failed' ; exit 1; }
+cd ${REPOS_FOLDER}/everyedge/src/srv6-sdn-data-plane || { echo 'Failed' ; exit 1; }
 python3 setup.py install || { echo 'Failed' ; exit 1; }
 
 # Setup and build protos
-cd ${REPOS_FOLDER}/srv6-sdn-proto || { echo 'Failed' ; exit 1; }
+cd ${REPOS_FOLDER}/everyedge/src/srv6-sdn-proto || { echo 'Failed' ; exit 1; }
 python3 setup.py install || { echo 'Failed' ; exit 1; }
 
 # Setup authentication utils
-cd ${REPOS_FOLDER}/srv6-sdn-authentication || { echo 'Failed' ; exit 1; }
+cd ${REPOS_FOLDER}/everyedge/src/srv6-sdn-authentication || { echo 'Failed' ; exit 1; }
 python3 setup.py install || { echo 'Failed' ; exit 1; }
 
 # Setup STAMP utils
-cd ${REPOS_FOLDER}/srv6pm-delay-measurement || { echo 'Failed' ; exit 1; }
+cd ${REPOS_FOLDER}/everyedge/src/srv6pm-delay-measurement || { echo 'Failed' ; exit 1; }
 python3 setup.py install || { echo 'Failed' ; exit 1; }
 
 # Create folder for config files
@@ -206,6 +202,8 @@ source ${VENV_ACTIVATE_SCRIPT}
 # Start the EveryEdge
 python3 -m srv6_sdn_data_plane.ew_edge_device -c /etc/everyedge/config.ini
 EOF
+
+echo "$EVERYEDGE_VERSION" > "$VERSION_FILENAME"
 
 # Remove temporary files
 rm -rf ${REPOS_FOLDER} || { echo 'Failed' ; exit 1; }
