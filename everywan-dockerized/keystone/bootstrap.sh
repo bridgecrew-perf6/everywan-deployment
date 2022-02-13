@@ -19,8 +19,8 @@ keystone-manage bootstrap --bootstrap-username admin \
 		--bootstrap-project-name admin \
 		--bootstrap-role-name admin \
 		--bootstrap-service-name keystone \
-		--bootstrap-admin-url "${HTTP}://0.0.0.0:35357/v3" \
-		--bootstrap-public-url "${HTTP}://0.0.0.0:5000/v3" \
-		--bootstrap-internal-url "${HTTP}://0.0.0.0:5000/v3"
+		--bootstrap-admin-url "${HTTP}://${KEYSTONE_HOST}:35357/v3" \
+		--bootstrap-public-url "${HTTP}://${KEYSTONE_HOST}:5000/v3" \
+		--bootstrap-internal-url "${HTTP}://${KEYSTONE_HOST}:5000/v3"
 
 /usr/bin/keystone-all

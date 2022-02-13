@@ -10,6 +10,7 @@ services:
         KEYSTONE_DB_PASSWORD: ${KEYSTONE_DB_PASSWORD}
         KEYSTONE_DB_HOST: ${KEYSTONE_DB_HOST:-"database"}
         KEYSTONE_ADMIN_PASSWORD: ${KEYSTONE_ADMIN_PASSWORD}
+        KEYSTONE_HOST: ${KEYSTONE_HOST:-"0.0.0.0"}
         HTTP: ${HTTP:-http}
     depends_on:
       - database
