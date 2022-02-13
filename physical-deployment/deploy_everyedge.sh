@@ -88,7 +88,7 @@ mkdir -p -m 0600 ~/.ssh && ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts || { 
 mkdir -p ${REPOS_FOLDER} || { echo 'Failed' ; exit 1; }
 
 # Clone the repositories
-git clone git@github.com:cscarpitta/everyedge.git --branch ${EVERYEDGE_VERSION} ${REPOS_FOLDER}/everyedge || { echo 'Failed' ; exit 1; }
+git clone https://github.com/cscarpitta/everyedge.git --branch ${EVERYEDGE_VERSION} ${REPOS_FOLDER}/everyedge || { echo 'Failed' ; exit 1; }
 cd ${REPOS_FOLDER}/everyedge || { echo 'Failed' ; exit 1; }
 git submodule update --init || { echo 'Failed' ; exit 1; }
 
