@@ -199,6 +199,39 @@ fi
 # Activate the EveryEdge virtual environment
 source ${VENV_ACTIVATE_SCRIPT}
 
+CONFIG_FILE="/etc/everyedge/config.ini"
+TOKEN_FILE="/etc/everyedge/token"
+
+echo "Checking for EveryEdge configuration file \$CONFIG_FILE..."
+
+if [ ! -f "\$CONFIG_FILE" ]; then
+     echo "Configuration file not found"
+     echo "Waiting until the config file is created"
+fi
+
+until [ -f \$CONFIG_FILE ]
+do
+     sleep 5
+done
+
+echo "Found configuration file \$CONFIG_FILE"
+
+echo "Checking for EveryEdge authentication token \$TOKEN_FILE..."
+
+if [ ! -f "\$TOKEN_FILE" ]; then
+     echo "Authentication token not found"
+     echo "Waiting until the authentication token is created"
+fi
+
+until [ -f \$TOKEN_FILE ]
+do
+     sleep 5
+done
+
+echo "Found configuration file \$TOKEN_FILE"
+
+echo "Starting EveryEdge..."
+
 # Start the EveryEdge
 python3 -m srv6_sdn_data_plane.ew_edge_device -c /etc/everyedge/config.ini
 EOF
