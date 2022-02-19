@@ -131,6 +131,10 @@ python3 setup.py install || { echo 'Failed' ; exit 1; }
 cd ${REPOS_FOLDER}/everyedge/src/srv6pm-delay-measurement || { echo 'Failed' ; exit 1; }
 python3 setup.py install || { echo 'Failed' ; exit 1; }
 
+# Install confgen script
+if [ -d ${REPOS_FOLDER}/everyedge/scripts ]; then
+    cp -r ${REPOS_FOLDER}/everyedge/scripts ${EVERYEDGE_FOLDER} || { echo 'Failed' ; exit 1; }
+
 # Create folder for config files
 mkdir -p /etc/everyedge || { echo 'Failed' ; exit 1; }
 
