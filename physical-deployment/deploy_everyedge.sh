@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Software versions
-EVERYEDGE_VERSION=v0.1.4
+EVERYEDGE_VERSION=v0.2.0
 
 if [ "$EUID" -ne 0 ]
   then echo "This script must run as root."
@@ -46,6 +46,7 @@ EVERYEDGE_FOLDER="${DEPLOYMENT_DIR}/everyedge"
 VENV_FOLDER="${EVERYEDGE_FOLDER}/everyedge-venv"
 VENV_ACTIVATE_SCRIPT="${VENV_FOLDER}/bin/activate"
 STARTER_FILENAME="${EVERYEDGE_FOLDER}/starter.sh"
+CONFGEN_FILENAME="${EVERYEDGE_FOLDER}/confgen.sh"
 VERSION_FILENAME="${EVERYEDGE_FOLDER}/VERSION"
 REPOS_FOLDER="/tmp/everywan-repos"
 
@@ -130,6 +131,12 @@ python3 setup.py install || { echo 'Failed' ; exit 1; }
 # Setup STAMP utils
 cd ${REPOS_FOLDER}/everyedge/src/srv6pm-delay-measurement || { echo 'Failed' ; exit 1; }
 python3 setup.py install || { echo 'Failed' ; exit 1; }
+
+# Install confgen script
+pip install PyInquirer
+if [ -d ${REPOS_FOLDER}/everyedge/scripts ]; then
+    cp -r ${REPOS_FOLDER}/everyedge/scripts ${EVERYEDGE_FOLDER} || { echo 'Failed' ; exit 1; }
+fi
 
 # Create folder for config files
 mkdir -p /etc/everyedge || { echo 'Failed' ; exit 1; }
@@ -234,6 +241,22 @@ echo "Starting EveryEdge..."
 
 # Start the EveryEdge
 python3 -m srv6_sdn_data_plane.ew_edge_device -c /etc/everyedge/config.ini
+EOF
+
+# Create a starter script for config generator (confgen()
+cat << EOF > ${CONFGEN_FILENAME}
+#!/usr/bin/bash
+
+if [ "\$EUID" -ne 0 ]
+  then echo "EveryEdge must run as root."
+  exit
+fi
+
+# Activate the EveryEdge virtual environment
+source ${VENV_ACTIVATE_SCRIPT}
+
+# Start confgen
+python $EVERYEDGE_FOLDER/scripts/confgen.py
 EOF
 
 echo "$EVERYEDGE_VERSION" > "$VERSION_FILENAME"
