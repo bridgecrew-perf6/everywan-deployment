@@ -74,6 +74,8 @@ services:
   everyedgeos:
     container_name: everyedgeos
     image: ghcr.io/cscarpitta/everyedgeos:latest
+    devices:
+      - /dev/net/tun:/dev/net/tun
     cap_add:
       - NET_ADMIN
     networks:
