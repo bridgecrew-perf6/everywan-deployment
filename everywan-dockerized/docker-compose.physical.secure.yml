@@ -54,6 +54,7 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - ./mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - /var/everywan/mongodb:/data/db
     networks: 
       - everywan-net
     restart: always
