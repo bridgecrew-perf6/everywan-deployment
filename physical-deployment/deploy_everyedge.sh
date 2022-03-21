@@ -92,6 +92,7 @@ mkdir -p ${REPOS_FOLDER} || { echo 'Failed' ; exit 1; }
 git clone https://github.com/cscarpitta/everyedge.git --branch ${EVERYEDGE_VERSION} ${REPOS_FOLDER}/everyedge || { echo 'Failed' ; exit 1; }
 cd ${REPOS_FOLDER}/everyedge || { echo 'Failed' ; exit 1; }
 git submodule update --init || { echo 'Failed' ; exit 1; }
+git clone https://github.com/cscarpitta/etherws.git ${REPOS_FOLDER}/etherws || { echo 'Failed' ; exit 1; }
 
 # Workaround: The patch which introduces the support for End.DT4 and End.DT46
 # behaviors has not been accepted yet
@@ -130,6 +131,10 @@ python3 setup.py install || { echo 'Failed' ; exit 1; }
 
 # Setup STAMP utils
 cd ${REPOS_FOLDER}/everyedge/src/srv6pm-delay-measurement || { echo 'Failed' ; exit 1; }
+python3 setup.py install || { echo 'Failed' ; exit 1; }
+
+# Setup etherws
+cd ${REPOS_FOLDER}/etherws || { echo 'Failed' ; exit 1; }
 python3 setup.py install || { echo 'Failed' ; exit 1; }
 
 # Install confgen script
@@ -238,6 +243,12 @@ done
 echo "Found configuration file \$TOKEN_FILE"
 
 echo "Starting EveryEdge..."
+
+# Kill etherws, if it is running
+pkill -f etherws
+
+# Start etherws service
+etherws sw
 
 # Start the EveryEdge
 python3 -m srv6_sdn_data_plane.ew_edge_device -c /etc/everyedge/config.ini
