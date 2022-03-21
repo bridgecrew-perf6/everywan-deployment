@@ -43,7 +43,7 @@ services:
       MYSQL_PASSWORD: ${KEYSTONE_DB_PASSWORD}
       MYSQL_DATABASE: ${KEYSTONE_DB_NAME:-keystone}
     volumes:
-      - /var/everywan/keystone-database:/var/lib/mysql
+      - keystone_db_volume:/var/lib/mysql
     restart: always
 
 
@@ -56,7 +56,7 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - ./mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-      - /var/everywan/mongodb:/data/db
+      - mongodb_volume:/data/db
     networks: 
       - everywan-net
     restart: always
@@ -146,3 +146,7 @@ networks:
     ipam:
       config:
         - subnet: "2001:db9:1::/64"
+
+volumes:
+  mongodb_volume:
+  keystone_db_volume:
