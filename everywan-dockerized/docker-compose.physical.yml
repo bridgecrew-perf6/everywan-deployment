@@ -41,6 +41,8 @@ services:
       MYSQL_USER: ${KEYSTONE_DB_USER:-keystone}
       MYSQL_PASSWORD: ${KEYSTONE_DB_PASSWORD}
       MYSQL_DATABASE: ${KEYSTONE_DB_NAME:-keystone}
+    volumes:
+      - /var/everywan/keystone-database:/var/lib/mysql
 
 
   mongodb:
