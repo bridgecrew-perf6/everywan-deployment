@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Software versions
-EVERYEDGE_VERSION=v0.4.3
+EVERYEDGE_VERSION=v0.4.4
 
 if [ "$EUID" -ne 0 ]
   then echo "This script must run as root."
@@ -93,24 +93,6 @@ git clone https://github.com/cscarpitta/everyedge.git --branch ${EVERYEDGE_VERSI
 cd ${REPOS_FOLDER}/everyedge || { echo 'Failed' ; exit 1; }
 git submodule update --init || { echo 'Failed' ; exit 1; }
 git clone https://github.com/cscarpitta/etherws.git ${REPOS_FOLDER}/etherws || { echo 'Failed' ; exit 1; }
-
-# Workaround: The patch which introduces the support for End.DT4 and End.DT46
-# behaviors has not been accepted yet
-# We fix this issue by using our patched version of pyroute2
-pip3 install twine
-git clone https://github.com/cscarpitta/pyroute2.git --branch srv6_end_dt4 ${REPOS_FOLDER}/pyroute2 || { echo 'Failed' ; exit 1; }
-cd ${REPOS_FOLDER}/pyroute2 || { echo 'Failed' ; exit 1; }
-make dist python=python3 || { echo 'Failed' ; exit 1; }
-pip3 install dist/pyroute2.core-* || { echo 'Failed' ; exit 1; }
-pip3 install dist/pyroute2.ethtool-* || { echo 'Failed' ; exit 1; }
-pip3 install dist/pyroute2.ipdb-* || { echo 'Failed' ; exit 1; }
-pip3 install dist/pyroute2.ipset-* || { echo 'Failed' ; exit 1; }
-pip3 install dist/pyroute2.minimal-* || { echo 'Failed' ; exit 1; }
-pip3 install dist/pyroute2.ndb-* || { echo 'Failed' ; exit 1; }
-pip3 install dist/pyroute2.nftables-* || { echo 'Failed' ; exit 1; }
-pip3 install dist/pyroute2.nslink-* || { echo 'Failed' ; exit 1; }
-pip3 install dist/pyroute2.protocols-* || { echo 'Failed' ; exit 1; }
-pip3 install dist/pyroute2-* || { echo 'Failed' ; exit 1; }
 
 # Setup pynat
 pip3 install six || { echo 'Failed' ; exit 1; }
