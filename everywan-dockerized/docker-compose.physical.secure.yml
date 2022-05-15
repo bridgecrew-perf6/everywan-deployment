@@ -93,6 +93,7 @@ services:
       - "net.ipv6.conf.all.disable_ipv6=0"
     ports:
       - "50061:50061"
+      - "4789:4789/udp"
     environment:
       MONGODB_HOST: ${MONGO_IP:-mongodb}
       MONGODB_PORT: ${MONGO_PORT:-27017}
