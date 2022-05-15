@@ -2,6 +2,6 @@
 
 cd /workdir
 echo "Renewing Let's Encrypt Certificates... (`date`)"
-docker-compose run --entrypoint certbot certbot renew
+docker-compose -f docker-compose.physical.secure.yml run --entrypoint certbot certbot renew
 echo "Reloading Nginx configuration"
-docker-compose exec -T everygui nginx -s reload
+docker-compose -f docker-compose.physical.secure.yml exec -T everygui nginx -s reload
