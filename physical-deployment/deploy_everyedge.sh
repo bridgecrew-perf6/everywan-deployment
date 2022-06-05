@@ -241,8 +241,8 @@ echo "Configuring Wireguard"
 wg-quick up \$WIREGUARD_CONFIG_FILE || { echo 'Failed' ; exit 1; }
 
 echo "Creating virtual hosts"
-num_vhosts=`cat \$NUM_VHOSTS_FILE`
-vhosts_idx=`cat \$VHOSTS_IDX_FILE`
+num_vhosts=\`cat \$NUM_VHOSTS_FILE\`
+vhosts_idx=\`cat \$VHOSTS_IDX_FILE\`
 curl https://raw.githubusercontent.com/cscarpitta/everywan-deployment/master/physical-deployment/destroy_vhosts.sh | bash -s -- -n \$num_vhosts -i \$vhosts_idx &> /dev/null
 curl https://raw.githubusercontent.com/cscarpitta/everywan-deployment/master/physical-deployment/deploy_vhosts.sh | bash -s -- -n \$num_vhosts -i \$vhosts_idx || { echo 'Failed' ; exit 1; }
 
