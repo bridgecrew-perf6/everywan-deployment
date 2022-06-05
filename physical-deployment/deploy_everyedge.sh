@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Software versions
-EVERYEDGE_VERSION=v0.5.0
+EVERYEDGE_VERSION=v0.6.0
 
 if [ "$EUID" -ne 0 ]
   then echo "This script must run as root."
@@ -61,7 +61,7 @@ mkdir -p ${EVERYEDGE_FOLDER}
 apt-get update || { echo 'Failed' ; exit 1; }
 
 # Install dependencies
-DEBIAN_FRONTEND="noninteractive" apt-get install -y git python3 python3-pip python3-venv jq libffi-dev libssl-dev || { echo 'Failed' ; exit 1; }
+DEBIAN_FRONTEND="noninteractive" apt-get install -y git python3 python3-pip python3-venv jq libffi-dev libssl-dev resolvconf || { echo 'Failed' ; exit 1; }
 
 # Install Rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
@@ -202,6 +202,9 @@ source ${VENV_ACTIVATE_SCRIPT}
 
 CONFIG_FILE="/etc/everyedge/config.ini"
 TOKEN_FILE="/etc/everyedge/token"
+WIREGUARD_CONFIG_FILE="/etc/everyedge/wg0-ipv6.conf"
+NUM_VHOSTS_FILE="/etc/everyedge/vhosts.conf"
+VHOSTS_IDX_FILE="/etc/everyedge/vhosts-idx.conf"
 
 echo "Checking for EveryEdge configuration file \$CONFIG_FILE..."
 
@@ -230,6 +233,18 @@ do
 done
 
 echo "Found configuration file \$TOKEN_FILE"
+
+echo "Removing old Wireguard configuration"
+wg-quick down \$WIREGUARD_CONFIG_FILE &> /dev/null
+
+echo "Configuring Wireguard"
+wg-quick up \$WIREGUARD_CONFIG_FILE || { echo 'Failed' ; exit 1; }
+
+echo "Creating virtual hosts"
+num_vhosts=`cat \$NUM_VHOSTS_FILE`
+vhosts_idx=`cat \$VHOSTS_IDX_FILE`
+curl https://raw.githubusercontent.com/cscarpitta/everywan-deployment/master/physical-deployment/destroy_vhosts.sh | bash -s -- -n \$num_vhosts -i \$vhosts_idx &> /dev/null
+curl https://raw.githubusercontent.com/cscarpitta/everywan-deployment/master/physical-deployment/deploy_vhosts.sh | bash -s -- -n \$num_vhosts -i \$vhosts_idx || { echo 'Failed' ; exit 1; }
 
 echo "Starting EveryEdge..."
 
