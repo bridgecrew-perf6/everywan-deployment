@@ -61,7 +61,7 @@ mkdir -p ${EVERYEDGE_FOLDER}
 apt-get update || { echo 'Failed' ; exit 1; }
 
 # Install dependencies
-DEBIAN_FRONTEND="noninteractive" apt-get install -y git python3 python3-pip python3-venv jq libffi-dev libssl-dev resolvconf || { echo 'Failed' ; exit 1; }
+DEBIAN_FRONTEND="noninteractive" apt-get install -y git python3 python3-pip python3-venv jq libffi-dev libssl-dev resolvconf wireguard || { echo 'Failed' ; exit 1; }
 
 # Install Rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
