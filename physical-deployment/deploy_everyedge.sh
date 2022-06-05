@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Software versions
-EVERYEDGE_VERSION=v0.6.1
+EVERYEDGE_VERSION=v0.6.2
 
 if [ "$EUID" -ne 0 ]
   then echo "This script must run as root."
@@ -234,17 +234,33 @@ done
 
 echo "Found configuration file \$TOKEN_FILE"
 
-echo "Removing old Wireguard configuration"
-wg-quick down \$WIREGUARD_CONFIG_FILE &> /dev/null
+if [ -f "\$WIREGUARD_CONFIG_FILE" ]; then
+    echo "Removing old Wireguard configuration"
+    wg-quick down \$WIREGUARD_CONFIG_FILE &> /dev/null
 
-echo "Configuring Wireguard"
-wg-quick up \$WIREGUARD_CONFIG_FILE || { echo 'Failed' ; exit 1; }
+    echo "Configuring Wireguard"
+    wg-quick up \$WIREGUARD_CONFIG_FILE || { echo 'Failed' ; exit 1; }
+fi
 
-echo "Creating virtual hosts"
-num_vhosts=\`cat \$NUM_VHOSTS_FILE\`
-vhosts_idx=\`cat \$VHOSTS_IDX_FILE\`
-curl https://raw.githubusercontent.com/cscarpitta/everywan-deployment/master/physical-deployment/destroy_vhosts.sh | bash -s -- -n \$num_vhosts -i \$vhosts_idx &> /dev/null
-curl https://raw.githubusercontent.com/cscarpitta/everywan-deployment/master/physical-deployment/deploy_vhosts.sh | bash -s -- -n \$num_vhosts -i \$vhosts_idx || { echo 'Failed' ; exit 1; }
+
+if [ -f "\$WIREGUARD_CONFIG_FILE" ]; then
+    echo "Creating virtual hosts"
+    num_vhosts=\`cat \$NUM_VHOSTS_FILE\`
+    vhosts_idx=\`cat \$VHOSTS_IDX_FILE\`
+    curl https://raw.githubusercontent.com/cscarpitta/everywan-deployment/master/physical-deployment/destroy_vhosts.sh | bash -s -- -n \$num_vhosts -i \$vhosts_idx &> /dev/null
+    curl https://raw.githubusercontent.com/cscarpitta/everywan-deployment/master/physical-deployment/deploy_vhosts.sh | bash -s -- -n \$num_vhosts -i \$vhosts_idx || { echo 'Failed' ; exit 1; }
+fi
+
+echo "Configuring kernel parameters"
+
+sysctl -w net.ipv6.conf.all.seg6_enabled=1
+
+if [ -f "\$WIREGUARD_CONFIG_FILE" ]; then
+    sysctl -w net.ipv6.conf.wg0-ipv6.seg6_enabled=1
+fi
+
+modprobe vrf
+sysctl -w net.vrf.strict_mode=1
 
 echo "Starting EveryEdge..."
 
