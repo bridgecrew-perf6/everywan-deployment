@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Software versions
-EVERYEDGE_VERSION=v0.6.3
+EVERYEDGE_VERSION=v0.6.4
 
 if [ "$EUID" -ne 0 ]
   then echo "This script must run as root."
