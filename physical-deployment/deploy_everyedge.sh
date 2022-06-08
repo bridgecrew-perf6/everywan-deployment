@@ -136,7 +136,7 @@ fi
 mkdir -p /etc/everyedge || { echo 'Failed' ; exit 1; }
 
 # Setup iptables and libpcap
-apt-get install -y iptables libpcap-dev || { echo 'Failed' ; exit 1; }
+DEBIAN_FRONTEND="noninteractive" apt-get install -y iptables libpcap-dev || { echo 'Failed' ; exit 1; }
 # update-alternatives --set ip6tables /usr/sbin/ip6tables-nft || { echo 'Failed' ; exit 1; }
 
 # Generate and export the device information file
