@@ -70,7 +70,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 source ~/.bashrc
 
 # Create a virtual environment
-python3 -m venv "${VENV_FOLDER}" || { echo 'Failed' ; exit 1; }
+python3.8 -m venv "${VENV_FOLDER}" || { echo 'Failed' ; exit 1; }
 
 # Activate the virtual environment
 source "${VENV_ACTIVATE_SCRIPT}" || { echo 'Failed' ; exit 1; }
