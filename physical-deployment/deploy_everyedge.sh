@@ -259,7 +259,7 @@ if [ -f "\$WIREGUARD_CONFIG_FILE" ]; then
 fi
 
 
-if [ -f "\$WIREGUARD_CONFIG_FILE" ]; then
+if [ -f "\$NUM_VHOSTS_FILE" ]; then
     echo "Creating virtual hosts"
     num_vhosts=\`cat \$NUM_VHOSTS_FILE\`
     vhosts_idx=\`cat \$VHOSTS_IDX_FILE\`
