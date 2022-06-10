@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Software versions
-EVERYEDGE_VERSION=v0.6.4
+EVERYEDGE_VERSION=v0.6.5
 
 if [ "$EUID" -ne 0 ]
   then echo "This script must run as root."
@@ -93,6 +93,22 @@ git clone https://github.com/cscarpitta/everyedge.git --branch ${EVERYEDGE_VERSI
 cd ${REPOS_FOLDER}/everyedge || { echo 'Failed' ; exit 1; }
 git submodule update --init || { echo 'Failed' ; exit 1; }
 git clone https://github.com/cscarpitta/etherws.git ${REPOS_FOLDER}/etherws || { echo 'Failed' ; exit 1; }
+
+# Workaround: We install a patched version of pyroute2 that solves an issue related to fdb
+pip3 install twine
+git clone https://github.com/cscarpitta/pyroute2.git --branch fix-fdb-replace-issue ${REPOS_FOLDER}/pyroute2 || { echo 'Failed' ; exit 1; }
+cd ${REPOS_FOLDER}/pyroute2 || { echo 'Failed' ; exit 1; }
+make dist python=python3 || { echo 'Failed' ; exit 1; }
+pip3 install dist/pyroute2.core-* || { echo 'Failed' ; exit 1; }
+pip3 install dist/pyroute2.ethtool-* || { echo 'Failed' ; exit 1; }
+pip3 install dist/pyroute2.ipdb-* || { echo 'Failed' ; exit 1; }
+pip3 install dist/pyroute2.ipset-* || { echo 'Failed' ; exit 1; }
+pip3 install dist/pyroute2.minimal-* || { echo 'Failed' ; exit 1; }
+pip3 install dist/pyroute2.ndb-* || { echo 'Failed' ; exit 1; }
+pip3 install dist/pyroute2.nftables-* || { echo 'Failed' ; exit 1; }
+pip3 install dist/pyroute2.nslink-* || { echo 'Failed' ; exit 1; }
+pip3 install dist/pyroute2.protocols-* || { echo 'Failed' ; exit 1; }
+pip3 install dist/pyroute2-* || { echo 'Failed' ; exit 1; }
 
 # Setup pynat
 pip3 install six || { echo 'Failed' ; exit 1; }
@@ -243,7 +259,7 @@ if [ -f "\$WIREGUARD_CONFIG_FILE" ]; then
 fi
 
 
-if [ -f "\$WIREGUARD_CONFIG_FILE" ]; then
+if [ -f "\$NUM_VHOSTS_FILE" ]; then
     echo "Creating virtual hosts"
     num_vhosts=\`cat \$NUM_VHOSTS_FILE\`
     vhosts_idx=\`cat \$VHOSTS_IDX_FILE\`
@@ -261,6 +277,12 @@ fi
 
 modprobe vrf
 sysctl -w net.vrf.strict_mode=1
+
+sysctl -w net.ipv4.conf.all.rp_filter=0
+sysctl -w net.ipv4.conf.default.rp_filter=0
+
+sysctl -w net.ipv4.ip_forward=1
+sysctl -w net.ipv6.conf.all.forwarding=1
 
 echo "Starting EveryEdge..."
 
