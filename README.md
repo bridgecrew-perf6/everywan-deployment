@@ -12,6 +12,7 @@ This repository contains some scripts to automate the deployment and configurati
 2. [Virtual Testbed](#virtual-testbed)
     1. [Management Infrastructure](#management-infrastructure)
     2. [Virtual Network](#virtual-network)
+3. [Development Environment](#development-environment)
 
 
 ## Physical Deployment
@@ -174,3 +175,8 @@ To attach to the Mininet CLI and control your virtual network:
 ```bash
 bash ./attach_to_mininet_cli.sh
 ```
+
+
+## Development Environment
+
+EveryWAN also integrates an open source development environment. This environment relies on an EveryWAN emulator based on the Mininet project that can be used to develop and test EveryWAN functionalities. To install and configure the development environment check the documentation [here](development-environment/README.md)
